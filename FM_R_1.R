@@ -78,6 +78,7 @@ for (i in 1:34)
   TS = rbind(TS,tem)
 }
 TS = cbind(TS,year=as.character(year),Sum_thd=(TS$Sum/1000))
+windows()
 plot(x=TS$year,y=TS$Sum_thd)
 #=====================================================================#
 #紅樹林站各月趨勢=====================================================#
@@ -99,6 +100,29 @@ MRT = function(DATA)
   New = data.frame(data.frame(name,Sum)[order(-Sum),] ,rank = c(1:108))
   return(New)
 }
+#=====================================================================#
+#function:選擇站名跑各月進站出站總流人數==============================#
+flow = function(stepname)
+{
+  In = data.frame();Out = data.frame()
+  for (i in 1:34)
+  {
+    tem1 = MRT(ListIn[[i]])
+    tem2 = MRT(ListOut[[i]])
+    tem1 = tem1[tem1$name == stepname,]
+    tem2 = tem2[tem2$name == stepname,]
+    In = rbind(In,tem1)
+    Out = rbind(Out,tem2)
+  }
+  In = cbind(In,year=as.character(year),Sum_thd=(In$Sum/1000))
+  Out = cbind(Out,year=as.character(year),Sum_thd=(Out$Sum/1000))
+  return(list(In=In,Out=Out))
+}
+#=====================================================================#
+#測試=================================================================#
+R27 = flow("紅樹林")
+plot(x=R27[[1]]$year,y=R27[[1]]$Sum_thd)
+plot(x=R27[[2]]$year,y=R27[[2]]$Sum_thd)
 #======================================================================#
 #測試輸入<失敗>========================================================#
 install.packages("ff")
